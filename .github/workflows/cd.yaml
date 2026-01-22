@@ -21,7 +21,7 @@ jobs:
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v5
         with:
-          context: .
+          context: ./QuakeWatch
           push: true
           # שים לב שזה תואם לשם הריפו שלך בתמונה
           tags: nadavshalom1/quakewatch:latest,nadavshalom1/quakewatch:${{ github.sha }}
