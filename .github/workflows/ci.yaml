@@ -25,5 +25,12 @@ jobs:
       - name: Run Pylint
         run: pylint --fail-under=5.0 **/*.py  # נותן ציון עובר אם הקוד סביר
 
-      - name: Build Docker Image (Dry Run)
-        run: docker build . -t test-image:latest
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./QuakeWatch 
+          push: true
+          tags: nadavshalom1/quakewatch:latest,nadavshalom1/quakewatch:${{ github.sha }}
+
+
+
