@@ -1,0 +1,29 @@
+name: CI - Lint & Test Build
+
+on:
+  push:
+    branches-ignore:
+      - main
+
+jobs:
+  lint-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'
+
+      - name: Install Dependencies
+        run: |
+          pip install pylint
+          pip install -r requirements.txt || true 
+
+      - name: Run Pylint
+        run: pylint --fail-under=5.0 **/*.py  # נותן ציון עובר אם הקוד סביר
+
+      - name: Build Docker Image (Dry Run)
+        run: docker build . -t test-image:latest

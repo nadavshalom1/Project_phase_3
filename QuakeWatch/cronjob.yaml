@@ -1,0 +1,19 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: health-check-cron
+spec:
+  schedule: "*/1 * * * *" # Runs every minute
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: curl-check
+            image: curlimages/curl:latest
+            # Tries to connect to the Service name (DNS resolution inside cluster)
+            command:
+            - /bin/sh
+            - -c
+            - "curl -sI http://web-app-service && echo 'Service is UP' || echo 'Service is DOWN'"
+          restartPolicy: OnFailure

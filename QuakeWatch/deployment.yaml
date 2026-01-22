@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-app-deployment
+  labels:
+    app: web-app
+spec:
+  replicas: 2 # Creates a ReplicaSet ensuring 2 pods run
+  selector:
+    matchLabels:
+      app: web-app
+  template:
+    metadata:
+      labels:
+        app: web-app
+    spec:
+      containers:
+      - name: web-app-container
+        # REPLACE THIS with your local image name (e.g., my-web-app:v1)
+        image: nginx:latest 
+        imagePullPolicy: IfNotPresent # Important for local Docker Desktop images
+        ports:
+        - containerPort: 80 # Adjust if your app listens on a different port (e.g., 3000 or 8080)
+        envFrom:
+        - configMapRef:
+            name: web-app-config
+        - secretRef:
+            name: web-app-secret
+        
+        # --- Advanced Concept: Probes ---
+        # Checks if the app is ready to accept traffic
+        readinessProbe:
+          httpGet:
+            path: / # Adjust to a valid endpoint in your app
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        
+        # Checks if the app is alive; restarts it if it fails
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 15
+          periodSeconds: 20

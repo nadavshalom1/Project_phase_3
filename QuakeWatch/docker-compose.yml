@@ -1,0 +1,9 @@
+services:
+  quakewatch:
+    build: .
+    ports:
+      - "5000:5000"
+    container_name: quakewatch_app
+    restart: unless-stopped
+    environment:
+      - FLASK_ENV=development
